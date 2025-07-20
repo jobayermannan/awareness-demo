@@ -1,0 +1,28 @@
+{
+  "name": "awareness-demo",
+  "version": "1.0.0",
+  "description": "A dynamic user-centered digital solution with adaptive personalization",
+  "main": "backend/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run backend:dev\" \"npm run frontend:dev\"",
+    "backend:dev": "cd backend && npm run dev",
+    "frontend:dev": "cd frontend && npm run dev",
+    "backend:start": "cd backend && npm start",
+    "frontend:build": "cd frontend && npm run build",
+    "frontend:start": "cd frontend && npm start",
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "setup": "npm run install:all"
+  },
+  "keywords": [
+    "personalization",
+    "user-experience",
+    "analytics",
+    "behavioral-patterns",
+    "adaptive-ui"
+  ],
+  "author": "awareness-demo",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
