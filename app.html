@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awareness Demo - Interactive Experience</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .app-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .step {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .step.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .question {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .input-group {
+            margin: 20px 0;
+        }
+        
+        input[type="text"], input[type="email"] {
+            width: 100%;
+            max-width: 400px;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            text-align: center;
+            transition: border-color 0.3s ease;
+        }
+        
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .color-picker {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .color-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+        
+        .color-option.selected {
+            border-color: #333;
+            transform: scale(1.2);
+        }
+        
+        .result-display {
+            background: linear-gradient(135deg, #f8f9ff, #e8efff);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .personality-trait {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            height: 6px;
+            border-radius: 3px;
+            margin: 30px 0;
+        }
+        
+        .progress-fill {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            height: 100%;
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+        
+        .back-btn {
+            background: transparent;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .adaptive-ui {
+            transition: all 0.3s ease;
+        }
+        
+        .camera-preview {
+            width: 200px;
+            height: 150px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="quiz-container adaptive-ui">
+            
+            <!-- Step 1: Color Preference -->
+            <div class="step active" id="step1">
+                <h1>🎨 Discover Your True Self</h1>
+                <div class="question">What color resonates with your soul today?</div>
+                <div class="color-picker">
+                    <div class="color-option" style="background: #FF6B6B" data-color="Red" title="Passionate Red"></div>
+                    <div class="color-option" style="background: #4ECDC4" data-color="Teal" title="Calming Teal"></div>
+                    <div class="color-option" style="background: #45B7D1" data-color="Blue" title="Trustworthy Blue"></div>
+                    <div class="color-option" style="background: #96CEB4" data-color="Green" title="Harmonious Green"></div>
+                    <div class="color-option" style="background: #FFEAA7" data-color="Yellow" title="Energetic Yellow"></div>
+                    <div class="color-option" style="background: #DDA0DD" data-color="Purple" title="Creative Purple"></div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 16.67%"></div>
+                </div>
+                <button class="btn" onclick="nextStep()" disabled id="step1Btn">Continue Your Journey</button>
+            </div>
+            
+            <!-- Step 2: Name -->
+            <div class="step" id="step2">
+                <h1>👋 Personal Connection</h1>
+                <div class="question">What name shall we use to personalize your experience?</div>
+                <div class="input-group">
+                    <input type="text" id="userName" placeholder="Enter your name..." maxlength="50">
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 33.33%"></div>
+                </div>
+                <button class="btn back-btn" onclick="prevStep()">Back</button>
+                <button class="btn" onclick="nextStep()" id="step2Btn">Continue</button>
+            </div>
+            
+            <!-- Step 3: Permissions -->
+            <div class="step" id="step3">
+                <h1>🔒 Enhanced Experience</h1>
+                <div class="question">To provide the most personalized insights, we'd like to access your location and camera for biometric analysis.</div>
+                <p style="font-size: 0.9rem; color: #666; margin: 20px 0;">
+                    Your privacy is our priority. All data is processed locally and never stored without your consent.
+                </p>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 50%"></div>
+                </div>
+                <button class="btn back-btn" onclick="prevStep()">Back</button>
+                <button class="btn" onclick="requestPermissions()">Grant Permissions</button>
+                <button class="btn back-btn" onclick="skipPermissions()">Skip</button>
+            </div>
+            
+            <!-- Step 4: Processing -->
+            <div class="step" id="step4">
+                <h1>🧠 Analyzing Your Profile</h1>
+                <div class="question">Please wait while we process your unique personality signature...</div>
+                <div class="camera-preview" id="cameraPreview">
+                    📷 Camera Preview
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 75%"></div>
+                </div>
+                <div style="margin: 20px 0; color: #666;">
+                    <div>🔍 Analyzing color psychology...</div>
+                    <div>📊 Processing behavioral patterns...</div>
+                    <div>🎯 Generating personalized insights...</div>
+                </div>
+            </div>
+            
+            <!-- Step 5: Results -->
+            <div class="step" id="step5">
+                <h1>✨ Your Awareness Profile</h1>
+                <div class="result-display">
+                    <h2 id="userGreeting">Hello, Amazing Person!</h2>
+                    <div class="personality-trait">
+                        <h3>🎨 Color Psychology</h3>
+                        <p id="colorAnalysis">Your color choice reveals fascinating insights about your personality.</p>
+                    </div>
+                    <div class="personality-trait">
+                        <h3>🧭 Behavioral Patterns</h3>
+                        <p id="behaviorAnalysis">Based on your interactions, we've identified your engagement style.</p>
+                    </div>
+                    <div class="personality-trait">
+                        <h3>🎯 Personalization Recommendations</h3>
+                        <p id="recommendations">Here are tailored suggestions for your optimal experience.</p>
+                    </div>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 100%"></div>
+                </div>
+                <button class="btn" onclick="restartQuiz()">Explore Again</button>
+                <button class="btn back-btn" onclick="window.location.href='landing.html'">Back to Home</button>
+            </div>
+            
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 1;
+        let userData = {
+            color: '',
+            name: '',
+            hasPermissions: false,
+            timestamp: new Date(),
+            interactions: []
+        };
+
+        // Color selection
+        document.querySelectorAll('.color-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+                this.classList.add('selected');
+                userData.color = this.dataset.color;
+                document.getElementById('step1Btn').disabled = false;
+                
+                // Adaptive UI based on color choice
+                adaptUIToColor(userData.color);
+                trackInteraction('color_selected', { color: userData.color });
+            });
+        });
+
+        // Name input
+        document.getElementById('userName').addEventListener('input', function() {
+            userData.name = this.value;
+            trackInteraction('name_input', { length: this.value.length });
+        });
+
+        function nextStep() {
+            if (currentStep < 5) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                currentStep++;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                
+                if (currentStep === 4) {
+                    setTimeout(() => {
+                        generateResults();
+                        nextStep();
+                    }, 3000);
+                }
+                
+                trackInteraction('step_advance', { step: currentStep });
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 1) {
+                document.getElementById(`step${currentStep}`).classList.remove('active');
+                currentStep--;
+                document.getElementById(`step${currentStep}`).classList.add('active');
+                trackInteraction('step_back', { step: currentStep });
+            }
+        }
+
+        function requestPermissions() {
+            // Simulate permission requests
+            navigator.geolocation?.getCurrentPosition(
+                (position) => {
+                    userData.location = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    console.log('Location access granted');
+                },
+                (error) => console.log('Location access denied')
+            );
+
+            navigator.mediaDevices?.getUserMedia({ video: true })
+                .then(stream => {
+                    userData.hasPermissions = true;
+                    const video = document.createElement('video');
+                    video.srcObject = stream;
+                    video.autoplay = true;
+                    video.style.width = '100%';
+                    video.style.borderRadius = '10px';
+                    document.getElementById('cameraPreview').innerHTML = '';
+                    document.getElementById('cameraPreview').appendChild(video);
+                    console.log('Camera access granted');
+                })
+                .catch(error => {
+                    console.log('Camera access denied');
+                    document.getElementById('cameraPreview').innerHTML = '📷 Camera access not available';
+                });
+
+            trackInteraction('permissions_granted');
+            nextStep();
+        }
+
+        function skipPermissions() {
+            trackInteraction('permissions_skipped');
+            nextStep();
+        }
+
+        function generateResults() {
+            const colorInsights = {
+                'Red': 'You are passionate, energetic, and bold. You thrive on excitement and aren\'t afraid to take risks.',
+                'Blue': 'You value trust, stability, and peace. You\'re reliable and have a calming presence.',
+                'Green': 'You seek harmony and balance. You\'re nurturing and have a strong connection to nature.',
+                'Yellow': 'You\'re optimistic, creative, and full of energy. You inspire others with your enthusiasm.',
+                'Purple': 'You\'re imaginative, spiritual, and unique. You have a strong appreciation for beauty and creativity.',
+                'Teal': 'You\'re balanced, refreshing, and sophisticated. You blend emotional and logical thinking beautifully.'
+            };
+
+            const behaviorInsights = [
+                'You prefer thoughtful decision-making and take time to consider options.',
+                'You\'re quick to engage and enjoy interactive experiences.',
+                'You value privacy but are open to personalized experiences.',
+                'You demonstrate high emotional intelligence and self-awareness.'
+            ];
+
+            const recommendations = [
+                'Try using calming backgrounds and smooth transitions in apps.',
+                'You might enjoy collaborative features and social interactions.',
+                'Consider using apps with strong privacy controls and transparency.',
+                'Look for platforms that offer deep customization options.'
+            ];
+
+            document.getElementById('userGreeting').textContent = `Hello, ${userData.name || 'Amazing Person'}! 🌟`;
+            document.getElementById('colorAnalysis').textContent = colorInsights[userData.color] || 'Your unique color choice shows your individuality!';
+            document.getElementById('behaviorAnalysis').textContent = behaviorInsights[Math.floor(Math.random() * behaviorInsights.length)];
+            document.getElementById('recommendations').textContent = recommendations[Math.floor(Math.random() * recommendations.length)];
+        }
+
+        function adaptUIToColor(color) {
+            const container = document.querySelector('.quiz-container');
+            const colorMap = {
+                'Red': '#FF6B6B',
+                'Blue': '#45B7D1',
+                'Green': '#96CEB4',
+                'Yellow': '#FFEAA7',
+                'Purple': '#DDA0DD',
+                'Teal': '#4ECDC4'
+            };
+            
+            if (colorMap[color]) {
+                container.style.borderLeft = `5px solid ${colorMap[color]}`;
+                document.documentElement.style.setProperty('--accent-color', colorMap[color]);
+            }
+        }
+
+        function trackInteraction(action, data = {}) {
+            userData.interactions.push({
+                action,
+                data,
+                timestamp: new Date(),
+                step: currentStep
+            });
+            
+            // Simulate analytics
+            console.log('📊 Analytics:', action, data);
+        }
+
+        function restartQuiz() {
+            currentStep = 1;
+            userData = {
+                color: '',
+                name: '',
+                hasPermissions: false,
+                timestamp: new Date(),
+                interactions: []
+            };
+            
+            document.querySelectorAll('.step').forEach(step => step.classList.remove('active'));
+            document.getElementById('step1').classList.add('active');
+            document.querySelectorAll('.color-option').forEach(o => o.classList.remove('selected'));
+            document.getElementById('userName').value = '';
+            document.getElementById('step1Btn').disabled = true;
+            
+            trackInteraction('quiz_restarted');
+        }
+
+        // Initialize
+        trackInteraction('quiz_started');
+        
+        // Add some interactive animations
+        setInterval(() => {
+            if (currentStep === 4) {
+                const indicators = document.querySelectorAll('#step4 > div:last-child > div');
+                indicators.forEach((indicator, index) => {
+                    setTimeout(() => {
+                        indicator.style.opacity = indicator.style.opacity === '0.5' ? '1' : '0.5';
+                    }, index * 200);
+                });
+            }
+        }, 1000);
+    </script>
+</body>
+</html>
